@@ -12,6 +12,6 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        $this->call(TacheSeeder::class);
+        $this->call(RecetteSeeder::class);
     }
 }
