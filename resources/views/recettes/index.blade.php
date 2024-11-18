@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Liste des recettes de Mamy Lens</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
+<x-menu />
 <h1>Liste des recettes de Mamy Lens</h1>
-
 @if(!empty($recettes))
     <ul>
         @foreach($recettes as $recette)
@@ -28,5 +29,6 @@
 @else
     <h3>Aucune recette</h3>
 @endif
+<x-footer />
 </body>
 </html>
