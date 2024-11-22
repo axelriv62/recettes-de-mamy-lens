@@ -10,10 +10,16 @@ class RecetteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $recettes = Recette::all();
-        return view('recettes.index', ['recettes' => $recettes]);
+        $cat = $request->input('cat', 'All');
+        if ($cat != 'All') {
+            $recettes = Recette::where('categorie', $cat)->get();
+        } else {
+            $recettes = Recette::all();
+        }
+        $categories = Recette::distinct('categorie')->pluck('categorie');
+        return view('recettes.index', ['recettes' => $recettes, 'cat' => $cat, 'categories' => $categories]);
     }
 
     /**
@@ -113,4 +119,6 @@ class RecetteController extends Controller
 
         return redirect()->route('recettes.index');
     }
+
+
 }
