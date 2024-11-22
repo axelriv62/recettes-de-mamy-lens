@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <title> Les recettes de Mamy Lens</title>
     @vite(['resources/css/app.css'])
 </head>
 <body>
@@ -12,6 +12,7 @@
 <main>
     {{ $slot }}
 </main>
-<x-footer />
 </body>
+<x-aside />
+<x-footer />
 </html>

@@ -8,7 +8,7 @@ Route::get('/', function () {
 })->name('accueil');
 
 
-Route::get('/recettes', [RecetteController::class,'index'])->name('recettes.index');
+// Route::get('/recettes', [RecetteController::class,'index'])->name('recettes.index');
 
 Route::get('/presentation', function () {
     return view('statiques.presentation');
@@ -17,3 +17,6 @@ Route::get('/presentation', function () {
 Route::get('/contact', function () {
     return view('statiques.contact');
 })->name('contact');
+
+#Route::resource('/recettes', 'RecetteController');
+Route::resource('/recettes', RecetteController::class);
