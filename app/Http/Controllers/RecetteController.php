@@ -4,23 +4,52 @@ namespace App\Http\Controllers;
 
 use App\Models\Recette;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\View\View;
 
 class RecetteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $cat = $request->input('cat', 'All');
-        if ($cat != 'All') {
-            $recettes = Recette::where('categorie', $cat)->get();
+//    public function index(Request $request)
+//    {
+//        $cat = $request->input('cat', 'All');
+//        if ($cat != 'All') {
+//            $recettes = Recette::where('categorie', $cat)->get();
+//        } else {
+//            $recettes = Recette::all();
+//        }
+//        $categories = Recette::distinct('categorie')->pluck('categorie');
+//        return view('recettes.index', ['recettes' => $recettes, 'cat' => $cat, 'categories' => $categories]);
+//    }
+
+    public function index(Request $request): View {
+        $cat = $request->input('cat', null);
+        $value = $request->cookie('cat', null);
+
+        if (!isset($cat)) {
+            if (!isset($value)) {
+                $recettes = Recette::all();
+                $cat = 'All';
+                Cookie::expire('cat');
+            } else {
+                $recettes = Recette::where('categorie', $value)->get();
+                $cat = $value;
+                Cookie::queue('cat', $cat, 10);            }
         } else {
-            $recettes = Recette::all();
+            if ($cat == 'All') {
+                $recettes = Recette::all();
+                Cookie::expire('cat');
+            } else {
+                $recettes = Recette::where('categorie', $cat)->get();
+                Cookie::queue('cat', $cat, 10);
+            }
         }
         $categories = Recette::distinct('categorie')->pluck('categorie');
         return view('recettes.index', ['recettes' => $recettes, 'cat' => $cat, 'categories' => $categories]);
     }
+
 
     /**
      * Show the form for creating a new resource.
