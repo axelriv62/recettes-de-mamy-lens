@@ -86,7 +86,9 @@ class RecetteController extends Controller
 
     $recette->save();
 
-    return redirect()->route('recettes.index');
+    return redirect()->route('recettes.index')
+        ->with('type', 'primary')
+        ->with('message', 'Recette ajoutée avec succès');
     }
 
     /**
@@ -135,7 +137,7 @@ class RecetteController extends Controller
 
         $recette->save();
 
-        return redirect()->route('recettes.show', ['id' => $recette->id]);
+        return redirect()->route('recettes.show', ['recette' => $recette->id]);
     }
 
     /**
