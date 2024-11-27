@@ -18,7 +18,7 @@
                 <br>
                 <hr>
                 <br>
-                <img src="{{ asset('storage/images/' . $recette->visuel) }}" alt="{{ $recette->nom }}" style="height: 100px">
+                <img src="{{ Storage::url($recette->visuel) }}"  alt="{{ $recette->nom }}" style="height: 100px">
                 <li>
                     <h3>{{ $recette->nom }}</h3>
                     <p>Description: {{ $recette->description }}</p>

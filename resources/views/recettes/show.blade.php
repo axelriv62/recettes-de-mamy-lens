@@ -8,7 +8,7 @@
         <hr class="mt-2 mb-2">
     </div>
     <div class="recette-details">
-        <img src="{{ asset('storage/images/' . $recette->visuel) }}" alt="{{ $recette->nom }}" class="recette-photo">
+        <img src="{{ Storage::url($recette->visuel) }}" alt="{{ $recette->nom }}" style="height: 100px">
         <p><strong>Nom :</strong> {{ $recette->nom }}</p>
         <p><strong>Description :</strong> {{ $recette->description }}</p>
         <p><strong>Catégorie :</strong> {{ $recette->categorie }}</p>

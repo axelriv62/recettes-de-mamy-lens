@@ -20,3 +20,5 @@ Route::get('/contact', function () {
 
 #Route::resource('/recettes', 'RecetteController');
 Route::resource('/recettes', RecetteController::class);
+
+Route::post('/recettes/{id}/upload', [RecetteController::class, 'upload'])->name('recettes.upload');

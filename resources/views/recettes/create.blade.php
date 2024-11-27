@@ -1,25 +1,16 @@
-{{--
-message d'erreur dans la saisie du formulaire.
---}}
-
-@if ($errors->any())
-    <div>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-{{--
-formulaire de saisie d'un tache
-la fonction 'route' utilise un nom de route
-'csrf_field' ajoute un champ caché qui permet de vérifier
-que le formulaire vient du serveur.
---}}
+{{-- resources/views/recettes/create.blade.php --}}
 <x-app>
-    <form action="{{ route('recettes.store') }}" method="POST" class="form-recette">
+    @if ($errors->any())
+        <div>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('recettes.store') }}" method="POST" class="form-recette" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="nom">Nom</label>
@@ -32,14 +23,10 @@ que le formulaire vient du serveur.
         <div class="form-group">
             <label for="categorie">Catégorie</label>
             <select name="categorie" id="categorie" class="form-control">
-                <option value="entree">Entrée</option>
-                <option value="plat">Plat</option>
-                <option value="dessert">Dessert</option>
+                <option value="Entrée">Entrée</option>
+                <option value="Plat">Plat</option>
+                <option value="Dessert">Dessert</option>
             </select>
-        </div>
-        <div class="form-group">
-            <label for="visuel">Visuel</label>
-            <input type="text" name="visuel" id="visuel" value="{{ old('visuel') }}" class="form-control">
         </div>
         <div class="form-group">
             <label for="nb_personnes">Nombre de personnes</label>
