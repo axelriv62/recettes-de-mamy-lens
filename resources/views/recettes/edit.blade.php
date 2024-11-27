@@ -1,29 +1,17 @@
-{{--
-    messages d'erreurs dans la saisie du formulaire.
---}}
+{{-- resources/views/recettes/edit.blade.php --}}
 <x-app>
-@if ($errors->any())
-    <div>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    @if ($errors->any())
+        <div>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-{{--
-    formulaire de saisie d'une tâche
-    la fonction 'route' utilise un nom de route.
-    '@csrf' ajoute un champ caché qui permet de vérifier
-    que le formulaire vient du serveur.
-    '@method('PUT') précise à Laravel que la requête doit être traitée
-    avec une commande PUT du protocole HTTP
---}}
-    <form action="{{ route('recettes.update', $recette->id) }}" method="POST" class="form-recette">
+    <form action="{{ route('recettes.update', $recette->id) }}" method="POST" class="form-recette" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
-
         <div class="form-group">
             <label for="nom">Nom</label>
             <input type="text" name="nom" id="nom" value="{{ old('nom', $recette->nom) }}" class="form-control">
@@ -41,10 +29,6 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="visuel">Visuel</label>
-            <input type="text" name="visuel" id="visuel" value="{{ old('visuel', $recette->visuel) }}" class="form-control">
-        </div>
-        <div class="form-group">
             <label for="nb_personnes">Nombre de personnes</label>
             <input type="number" name="nb_personnes" id="nb_personnes" value="{{ old('nb_personnes', $recette->nb_personnes) }}" class="form-control">
         </div>
@@ -58,6 +42,17 @@
         </div>
         <div class="form-group text-center">
             <button class="btn btn-success" type="submit">Valider</button>
+        </div>
+    </form>
+
+    <form action="{{ route('recettes.upload', $recette->id) }}" method="POST" class="form-recette" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label for="visuel">Visuel</label>
+            <input type="file" name="visuel" id="visuel" class="form-control">
+        </div>
+        <div class="form-group text-center">
+            <button class="btn btn-success" type="submit">Télécharger</button>
         </div>
     </form>
 </x-app>
