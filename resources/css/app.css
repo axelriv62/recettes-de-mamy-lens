@@ -1,3 +1,214 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    color: #343a40;
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: 300px 1fr 200px;
+    grid-template-rows: 80px 1fr 80px;
+}
+
+nav {
+    background-color: #69db7c;
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 40px;
+}
+
+nav button {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #37b24d;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    padding: 6px 10px;
+}
+
+nav button a {
+    text-decoration: none;
+}
+
+nav button:last-child {
+    background-color: #d6336c;
+    margin-left: auto;
+}
+
+main {
+    grid-column: 1 / 3;
+    overflow: scroll;
+    padding: 10px 20px;
+}
+
+aside {
+    grid-column: 3 / -1;
+    background-color: #e9ecef;
+    text-align: center;
+}
+
+aside .in-aside {
+    padding: 20px;
+}
+
+footer {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+/* Ajouté */
+img[alt="Banniere"] {
+    display: block;
+    margin: auto;
+    width: 60%;
+}
+
+/* Index de recettes */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    margin-bottom: 10px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Formulaires */
+.form-recette {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Show */
+.recette-details {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.recette-details p {
+    margin-bottom: 10px;
+}
+
+.recette-photo {
+    height: 100px;
+    display: block;
+    margin: auto;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    width: 150px;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
