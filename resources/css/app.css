@@ -212,3 +212,7 @@ img[alt="Banniere"] {
 .btn-danger:hover {
     background-color: #c82333;
 }
+
+nav .a-droite {
+    margin-left: auto;
+}
