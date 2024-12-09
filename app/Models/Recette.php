@@ -20,4 +20,8 @@ class Recette extends Model {
         'temps_preparation',
         'cout'
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
