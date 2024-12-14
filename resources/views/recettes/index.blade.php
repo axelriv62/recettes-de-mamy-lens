@@ -25,10 +25,22 @@
                             <p class="card-text"><strong>👥 Nombre de personnes:</strong> {{ $recette->nb_personnes }}</p>
                             <p class="card-text"><strong>⏱️ Temps de préparation:</strong> {{ $recette->temps_preparation }} minutes</p>
                             <p class="card-text"><strong>💰 Coût:</strong> {{ $recette->cout }}</p>
+                            <div class="list-buttons">
                             <form action="{{ route('recettes.show', $recette->id) }}" method="POST" style="text-align: center">
                                 @csrf
                                 <button type="submit" class="btn btn-primary">Afficher</button>
                             </form>
+                                @can('update', $recette)
+                                    <a href="{{ route('recettes.edit', $recette->id) }}" class="btn btn-edit">Modifier</a>
+                                @endcan
+                                @can('delete', $recette)
+                                    <form action="{{ route('recettes.destroy', $recette->id) }}" method="POST" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                @endcan
+                            </div>
                         </div>
                     </div>
                 @endforeach

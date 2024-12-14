@@ -17,14 +17,14 @@
     </div>
     <div class="text-center mt-4">
         @can('update', $recette)
-        <a href="{{ route('recettes.edit', $recette->id) }}" class="btn btn-primary">Modifier</a>
+            <a href="{{ route('recettes.edit', $recette->id) }}" class="btn btn-primary">Modifier</a>
         @endcan
         @can('delete', $recette)
-        <form action="{{ route('recettes.destroy', $recette->id) }}" method="POST" style="display:inline-block;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Supprimer</button>
-        </form>
+            <form action="{{ route('recettes.destroy', $recette->id) }}" method="POST" style="display:inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
         @endcan
     </div>
 </x-app>

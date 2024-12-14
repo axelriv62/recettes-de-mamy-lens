@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +27,6 @@ class RecetteFactory extends Factory {
             'temps_preparation' => $this->faker->numberBetween(10, 120),
             'cout' => $this->faker->numberBetween(1, 5),
             'user_id' => $this->faker->randomElement($users_id),
-            // 'user_id' => User::all()->random()->id,
         ];
     }
 }
