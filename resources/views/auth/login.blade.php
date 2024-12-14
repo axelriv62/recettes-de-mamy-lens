@@ -23,7 +23,8 @@
                 <button class="form-button" type="submit">Login</button>
             </div>
             <div class="form-footer">
-                Vous n'avez pas de compte ? <a href="{{route('register')}}">Enregistrement</a>
+                Vous n'avez pas de compte ? <a href="{{route('register')}}">Enregistrement</a><br>
+                Vous avez oublié votre mot de passe ? <a href="{{route('password.request')}}">Mot de passe oublié</a>
             </div>
         </form>
     </div><!--/.wrap-->
