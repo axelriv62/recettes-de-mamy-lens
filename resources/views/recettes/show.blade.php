@@ -5,7 +5,6 @@
         @else
             <h2>Affichage d'une recette</h2>
         @endif
-        <hr class="mt-2 mb-2">
     </div>
     <div class="recette-details">
         <img src="{{ Storage::url($recette->visuel) }}" alt="{{ $recette->nom }}" style="height: 100px">
@@ -17,11 +16,15 @@
         <p><strong>Coût :</strong> {{ $recette->cout }}</p>
     </div>
     <div class="text-center mt-4">
-        <a href="{{ route('recettes.edit', $recette->id) }}" class="btn btn-primary">Modifier</a>
-        <form action="{{ route('recettes.destroy', $recette->id) }}" method="POST" style="display:inline-block;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Supprimer</button>
-        </form>
+        @can('update', $recette)
+            <a href="{{ route('recettes.edit', $recette->id) }}" class="btn btn-primary">Modifier</a>
+        @endcan
+        @can('delete', $recette)
+            <form action="{{ route('recettes.destroy', $recette->id) }}" method="POST" style="display:inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        @endcan
     </div>
 </x-app>

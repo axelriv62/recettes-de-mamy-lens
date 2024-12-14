@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Recette;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -38,7 +39,8 @@ class RecetteController extends Controller
             } else {
                 $recettes = Recette::where('categorie', $value)->get();
                 $cat = $value;
-                Cookie::queue('cat', $cat, 10);            }
+                Cookie::queue('cat', $cat, 10);
+            }
         } else {
             if ($cat == 'All') {
                 $recettes = Recette::all();
@@ -48,6 +50,7 @@ class RecetteController extends Controller
                 Cookie::queue('cat', $cat, 10);
             }
         }
+
         $categories = Recette::distinct('categorie')->pluck('categorie');
         return view('recettes.index', ['recettes' => $recettes, 'cat' => $cat, 'categories' => $categories]);
     }
@@ -102,7 +105,7 @@ class RecetteController extends Controller
             'nb_personnes' => 'required',
             'temps_preparation' => 'required',
             'cout' => 'required',
-            'visuel' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048'
+            'visuel' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $recette = new Recette();
@@ -112,6 +115,7 @@ class RecetteController extends Controller
         $recette->nb_personnes = $request->input('nb_personnes');
         $recette->temps_preparation = $request->input('temps_preparation');
         $recette->cout = $request->input('cout');
+        $recette->user_id = $request->user()->id;
 
         if ($request->hasFile('visuel') && $request->file('visuel')->isValid()) {
             $file = $request->file('visuel');
@@ -153,7 +157,14 @@ class RecetteController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $user = $request->user();
         $recette = Recette::find($id);
+
+        if ($user->cant('update', $recette)) {
+            return redirect()->route('recettes.show', ['recette' => $recette->id])
+                ->with('type', 'warning')
+                ->with('message', 'Impossible de modifier la recette');
+        }
 
         $request->validate([
             'nom' => 'required',
@@ -184,9 +195,18 @@ class RecetteController extends Controller
     public function destroy(string $id)
     {
         $recette = Recette::find($id);
+
+        if (Gate::denies('delete', $recette)) {
+            return redirect()->route('recettes.show', ['recette' => $recette->id])
+                ->with('type', 'error')
+                ->with('msg', 'Impossible de supprimer la tâche');
+        }
+
         $recette->delete();
 
-        return redirect()->route('recettes.index');
+        return redirect()->route('recettes.index')
+            ->with('type', 'primary')
+            ->with('msg', 'Recette supprimée avec succès');
     }
 
     public function upload(Request $request, $id) {
