@@ -24,4 +24,11 @@ class Recette extends Model {
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    public function ingredients() {
+        return $this->belongsToMany(Ingredient::class, 'compose')
+            ->as('composition')
+            ->withPivot('quantite, observation')
+            ->withTimestamps();
+    }
 }
