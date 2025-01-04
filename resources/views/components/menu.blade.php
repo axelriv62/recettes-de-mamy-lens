@@ -10,6 +10,7 @@
         <button class="bouton"><a href="{{route('presentation')}}"><i class="fas fa-info"></i>ℹ️ Présentation</a></button>
         <button class="bouton"><a href="{{route('contact')}}"><i class="fas fa-envelope"></i>✉️ Contact</a></button>
         <button class="bouton"><a href="{{route('recettes.index')}}"><i class="fas fa-table-list"></i>📜 Recettes</a></button>
+        <button class="bouton"><a href="{{route('ingredients.index')}}"><i class="fas fa-table-list"></i>🥣 Ingrédients</a></button>
     @endauth
     @guest
         <div class="a-droite">

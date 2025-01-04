@@ -14,7 +14,7 @@ class IngredientFactory extends Factory
         return [
             'nom' => $this->faker->word,
             'nature' => $this->faker->word,
-            'visuel' => 'ingredient.jpg',
+            'visuel' => 'ingredient.png',
         ];
     }
 }
