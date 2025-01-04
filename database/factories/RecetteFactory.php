@@ -26,6 +26,7 @@ class RecetteFactory extends Factory {
             'nb_personnes' => $this->faker->numberBetween(1, 10),
             'temps_preparation' => $this->faker->numberBetween(10, 120),
             'cout' => $this->faker->numberBetween(1, 5),
+            'note' => $this->faker->numberBetween(1, 5),
             'user_id' => $this->faker->randomElement($users_id),
         ];
     }

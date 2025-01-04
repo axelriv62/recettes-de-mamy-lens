@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('nb_personnes');
             $table->integer('temps_preparation');
             $table->integer('cout');
+            $table->integer('note')->default(1);
             $table->timestamps();
             $table->foreignIdFor(User::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
         });
