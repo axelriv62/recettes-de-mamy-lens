@@ -2,57 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Recette;
+use App\Repositories\IIngredientRepository;
+use App\Repositories\IngredientRepository;
+use App\Repositories\IRecetteRepository;
+use App\Repositories\RecetteRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class RecetteController extends Controller
 {
+
+    private RecetteRepository $recetteRepository;
+    private IngredientRepository $ingredientRepository;
+
+    public function __construct(RecetteRepository $recetteRepository, IngredientRepository $ingredientRepository)
+    {
+        $this->recetteRepository = $recetteRepository;
+        $this->ingredientRepository = $ingredientRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
-//    public function index(Request $request)
-//    {
-//        $cat = $request->input('cat', 'All');
-//        if ($cat != 'All') {
-//            $recettes = Recette::where('categorie', $cat)->get();
-//        } else {
-//            $recettes = Recette::all();
-//        }
-//        $categories = Recette::distinct('categorie')->pluck('categorie');
-//        return view('recettes.index', ['recettes' => $recettes, 'cat' => $cat, 'categories' => $categories]);
-//    }
-
     public function index(Request $request): View {
-        $cat = $request->input('cat', null);
-        $value = $request->cookie('cat', null);
+        $cat = $request->input('cat', 'All');
+        $nb_personnes = $request->input('nb_personnes', 'All');
+        $cout = $request->input('cout', 'All');
+        $temps_preparation = $request->input('temps_preparation', 'All');
+        $random = $request->input('random', false);
+        $tri_par_notes = $request->input('tri_par_notes', false);
 
-        if (!isset($cat)) {
-            if (!isset($value)) {
-                $recettes = Recette::all();
+        if ($random) {
+            $recettes = $this->recetteRepository->random(5);
+        } else {
+            $cookieCat = $request->cookie('cat', null);
+            if ($cat === 'All' && $cookieCat !== null) {
                 $cat = 'All';
-                Cookie::expire('cat');
             } else {
-                $recettes = Recette::where('categorie', $value)->get();
-                $cat = $value;
                 Cookie::queue('cat', $cat, 10);
             }
-        } else {
-            if ($cat == 'All') {
-                $recettes = Recette::all();
-                Cookie::expire('cat');
+            if ($tri_par_notes) {
+                $recettes = $this->recetteRepository->all($cat, $nb_personnes, $cout, $temps_preparation)->sortByDesc('note');
             } else {
-                $recettes = Recette::where('categorie', $cat)->get();
-                Cookie::queue('cat', $cat, 10);
+                $recettes = $this->recetteRepository->all($cat, $nb_personnes, $cout, $temps_preparation);
             }
         }
+        $categories = $this->recetteRepository->categories();
 
-        $categories = Recette::distinct('categorie')->pluck('categorie');
-        return view('recettes.index', ['recettes' => $recettes, 'cat' => $cat, 'categories' => $categories]);
+        return view('recettes.index', [
+            'recettes' => $recettes,
+            'cat' => $cat,
+            'nb_personnes' => $nb_personnes,
+            'cout' => $cout,
+            'temps_preparation' => $temps_preparation,
+            'categories' => $categories,
+            'tri_par_notes' => $tri_par_notes,
+        ]);
     }
 
 
@@ -67,35 +73,6 @@ class RecetteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-//    public function store(Request $request)
-//    {
-//        $request->validate([
-//            'nom' => 'required',
-//            'description' => 'required',
-//            'categorie' => 'required',
-//            'visuel' => 'required',
-//            'nb_personnes' => 'required',
-//            'temps_preparation' => 'required',
-//            'cout' => 'required'
-//        ]);
-//
-//    $recette = new Recette();
-//
-//    $recette->nom = $request->input('nom');
-//    $recette->description = $request->input('description');
-//    $recette->categorie = $request->input('categorie');
-//    $recette->visuel = $request->input('visuel');
-//    $recette->nb_personnes = $request->input('nb_personnes');
-//    $recette->temps_preparation = $request->input('temps_preparation');
-//    $recette->cout = $request->input('cout');
-//
-//    $recette->save();
-//
-//    return redirect()->route('recettes.index')
-//        ->with('type', 'primary')
-//        ->with('message', 'Recette ajoutée avec succès');
-//    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -108,25 +85,7 @@ class RecetteController extends Controller
             'visuel' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $recette = new Recette();
-        $recette->nom = $request->input('nom');
-        $recette->description = $request->input('description');
-        $recette->categorie = $request->input('categorie');
-        $recette->nb_personnes = $request->input('nb_personnes');
-        $recette->temps_preparation = $request->input('temps_preparation');
-        $recette->cout = $request->input('cout');
-        $recette->user_id = $request->user()->id;
-
-        if ($request->hasFile('visuel') && $request->file('visuel')->isValid()) {
-            $file = $request->file('visuel');
-            $nom = 'image_' . time() . '.' . $file->extension();
-            $file->storeAs('images', $nom);
-            $recette->visuel = 'images/' . $nom;
-        } else {
-            $recette->visuel = 'images/recette.jpg';
-        }
-
-        $recette->save();
+        $ingredient = $this->recetteRepository->create($request->only(['nom', 'description', 'categorie', 'nb_personnes', 'temps_preparation', 'cout', 'visuel']));
 
         return redirect()->route('recettes.index')
             ->with('type', 'primary')
@@ -138,104 +97,128 @@ class RecetteController extends Controller
      */
     public function show(string $id)
     {
-        $recette = Recette::find($id);
-        $action = '';
-        return view('recettes.show', ['recette' => $recette, 'action' => $action]);
+        $action = request()->input('action', 'show');
+        $recette = $this->recetteRepository->find($id);
+        $recette->load('ingredients');
+        $allIngredients = $this->ingredientRepository->all();
+        return view('recettes.show', ['recette' => $recette, 'action' => $action], ['allIngredients' => $allIngredients]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(int $id)
     {
-        $recette = Recette::find($id);
-        return view('recettes.edit', ['recette' => $recette]);
+        $recette = $this->recetteRepository->find($id);
+        if (request()->user()->cannot('update', $recette)) {
+            return redirect()->route('recettes.index')
+                ->with('type', 'danger')
+                ->with('message', "Vous n'avez pas les droits pour modifier cette recette");
+        }
+
+        return view('recettes.edit', ['recette' => $recette], ['allingredients'], ['titre' => "Modification d'une recette"]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(string $id)
     {
-        $user = $request->user();
-        $recette = Recette::find($id);
+        $recette = $this->recetteRepository->find($id);
 
-        if ($user->cant('update', $recette)) {
-            return redirect()->route('recettes.show', ['recette' => $recette->id])
-                ->with('type', 'warning')
-                ->with('message', 'Impossible de modifier la recette');
+        if (request()->user()->cannot('update', $recette)) {
+            return redirect()->route('recettes.index')
+                ->with('type', 'danger')
+                ->with('message', "Vous n'avez pas les droits pour modifier cette recette");
         }
 
-        $request->validate([
+        request()->validate([
             'nom' => 'required',
             'description' => 'required',
             'categorie' => 'required',
-            'visuel' => 'required',
             'nb_personnes' => 'required',
             'temps_preparation' => 'required',
-            'cout' => 'required'
+            'cout' => 'required',
+            'visuel' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $recette->nom = $request->input('nom');
-        $recette->description = $request->input('description');
-        $recette->categorie = $request->input('categorie');
-        $recette->visuel = $request->input('visuel');
-        $recette->nb_personnes = $request->input('nb_personnes');
-        $recette->temps_preparation = $request->input('temps_preparation');
-        $recette->cout = $request->input('cout');
+        $this->recetteRepository->update($id, request()->only(['nom', 'description', 'categorie', 'nb_personnes', 'temps_preparation', 'cout', 'visuel']));
 
-        $recette->save();
-
-        return redirect()->route('recettes.show', ['recette' => $recette->id]);
+        return redirect()->route('recettes.index')
+            ->with('type', 'primary')
+            ->with('message', 'Recette modifiée avec succès');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        $recette = Recette::find($id);
-
-        if (Gate::denies('delete', $recette)) {
-            return redirect()->route('recettes.show', ['recette' => $recette->id])
-                ->with('type', 'error')
-                ->with('msg', 'Impossible de supprimer la tâche');
-        }
-
-        $recette->delete();
-
-        return redirect()->route('recettes.index')
-            ->with('type', 'primary')
-            ->with('msg', 'Recette supprimée avec succès');
-    }
-
-    public function upload(Request $request, $id) {
-        $recette = recette::findOrFail($id);
-        if ($request->hasFile('visuel') && $request->file('visuel')->isValid()) {
-            $file = $request->file('visuel');
-        } else {
-            $msg = "Aucun fichier téléchargé";
-            return redirect()->route('recettes.show', [$recette->id])
+        $val = request("delete", "annule");
+        if ($val == "delete") {
+            $recette = $this->recetteRepository->find($id);
+            if (request()->user()->cannot('delete', $recette)) {
+                return redirect()->route('recettes.index')
+                    ->with('type', 'danger')
+                    ->with('message', "Vous n'avez pas les droits pour supprimer cette recette");
+            }
+            $this->recetteRepository->delete($id);
+            return redirect()->route('recettes.index')
                 ->with('type', 'primary')
-                ->with('message', 'Recette non modifiée ('. $msg . ')');
+                ->with('message', 'Recette supprimée avec succès');
+        } else {
+            return redirect()->route('recettes.index')
+                ->with('type', 'danger')
+                ->with('message', 'Suppression annulée');
         }
-        $nom = 'image';
-        $now = time();
-        $nom = sprintf("%s_%d.%s", $nom, $now, $file->extension());
+    }
 
-        $file->storeAs('images/', $nom);
-        if (isset($recette->visuel)) {
-            Log::info("Image supprimée : ". $recette->visuel);
-            Storage::delete($recette->visuel);
+    public function upload(int $id)
+    {
+        $msg = '';
+        $type = 'primary';
+        if (request()->hasFile('visuel') && request()->file('visuel')->isValid()) {
+            $file = request()->file('visuel');
+            $recette = $this->recetteRepository->uploadImage($file, $id);
+            $msg = 'Image téléchargée avec succès';
+        } else {
+            if (request()->hasFile('image')) {
+                $msg = 'Fichier invalide';
+            } else {
+                $msg = 'Aucun fichier téléchargé';
+            }
+            $type = 'error';
         }
-        $recette->visuel = 'images/'.$nom;
-        $recette->save();
-        //$file->store('docs');
-        return redirect()->route('recettes.show', [$recette->id])
-            ->with('type', 'primary')
-            ->with('message', 'Tâche modifiée avec succès');
+        return redirect()->route('recettes.show', ['id' => $id])
+            ->with('type', $type)
+            ->with('message', $msg);
     }
 
 
+    // J'ai eu des soucis avec l'implémentation des fonctionnalités d'ajout et de suppression d'ingrédients.
+    // C'est pour cela que ces fonctionnalités ne sont pas disponibles dans l'application.
+    public function addIngredient(Request $request, $id)
+    {
+        $recette = $this->recetteRepository->find($id);
+        $ingredientId = $request->input('ingredient_id');
+        $quantite = $request->input('quantite');
+        $observation = $request->input('observation');
+
+        $recette->ingredients()->attach($ingredientId, ['quantite' => $quantite, 'observation' => $observation]);
+
+        return redirect()->route('recettes.show', $id)
+            ->with('type', 'primary')
+            ->with('message', 'Ingrédient ajouté avec succès');
+    }
+
+    public function removeIngredient($recetteId, $ingredientId)
+    {
+        $recette = $this->recetteRepository->find($recetteId);
+        $recette->ingredients()->detach($ingredientId);
+
+        return redirect()->route('recettes.show', $recetteId)
+            ->with('type', 'primary')
+            ->with('message', 'Ingrédient retiré avec succès');
+    }
 
 }
