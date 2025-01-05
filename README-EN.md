@@ -2,7 +2,7 @@
   <br>
   <img src="https://github.com/axelriv62/recettes-de-mamy-lens/tree/main/resources/images/icon.png" width="200">
   <br>
-  <b>Les Recettes de Mamy Lens</b>
+  <b>The Recipes of Mamy Lens</b>
   <br>
   <a href="https://github.com/axelriv62/recettes-de-mamy-lens/tree/main/README.md">
     <img src="https://img.shields.io/badge/README-FR-blue">
@@ -20,32 +20,32 @@
 
 <br>
 
-## Présentation
+## Presentation
 
-Ce projet a été réalisé dans le cadre d'un projet de travaux dirigés (TD) de troisème semestre de BUT Informatique à l'IUT de Lens.
+This project was realized out as part of a project of the third semester of the BUT in Computer Science at the IUT of Lens
 
 <br>
 
-L'objectif général était d'apprendre à utiliser le framework Laravel en concevant une application de gestion de recettes de cuisine.
+The main objective was learning to use the framework Laravel by designing a recipe management application.
 
 <br>
 
 ## Objectifs
 
-Dans le cadre de ce projet, les différents objectifs étaient les suivants :
+In the context of this project, the different objectives were as follows:
 
-+ Découvrir la structure d’un projet Laravel.
-+ Gérer une base de données SQLite via des requêtes.
-+ Utiliser Blade comme moteur de vue.
-+ Mettre en place un mécanisme de routage.
-+ Développer une application CRUD.
-+ Gérer les ressources statiques avec Vite.
-+ Implémenter l’authentification et la gestion des droits d’accès.
-+ Exploiter Eloquent pour interagir avec la base de données.
++ Discover the structure of a Laravel project.
++ Manage a SQLite database via requests.
++ Use Blade as a view engine.
++ Set up a routing mechanism.
++ Develop a CRUD application.
++ Manage static resources with Vite.
++ Implement authentication and access rights management.
++ Use Eloquent to interact with the database.
 
 <br>
 
-## Récupérer le projet
+## Get the project
 
 ```shell
 git clone https://github.com/axelriv62/recettes-de-mamy-lens.git
@@ -67,14 +67,14 @@ php artisan serve
 
 <br>
 
-## Pistes d’Amélioration
+## Areas for Improvement
 
-Bien que le projet soit abouti dans le cadre du TD, il reste perfectible. Voici quelques pistes d'amélioration :
+The project is complete in the context of the course, but there are still areas for improvement. Here are some possible improvements:
 
-+ __Style__ : Améliorer le style global de l'application, qui n'était pas une priorité.
++ __Style__ : Improve the global style of the application, which was not a priority.
 
 <br>
 
-## Langages, Outils et Logiciels Utilisés
+## Languages, Tools and Software Used
 
 ![My Skills](https://go-skill-icons.vercel.app/api/icons?i=laravel,html,css,git,gitlab&theme=dark)
