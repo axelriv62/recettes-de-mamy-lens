@@ -1,13 +1,13 @@
  <h1 align="center">
   <br>
-  <img src="https://github.com/axelriv62/recettes-de-mamy-lens/tree/main/resources/images/icon.png" width="200">
+  <img src="https://github.com/axelriv62/recettes-de-mamy-lens/blob/main/resources/images/icon.png" width="200">
   <br>
   <b>The Recipes of Mamy Lens</b>
   <br>
-  <a href="https://github.com/axelriv62/recettes-de-mamy-lens/tree/main/README.md">
+  <a href="https://github.com/axelriv62/recettes-de-mamy-lens/blob/main/README.md">
     <img src="https://img.shields.io/badge/README-FR-blue">
   </a>
-  <a href="https://github.com/axelriv62/recettes-de-mamy-lens/tree/main/README-EN.md">
+  <a href="https://github.com/axelriv62/recettes-de-mamy-lens/blob/main/README-EN.md">
     <img src="https://img.shields.io/badge/README-EN-blue">
   </a>
 </h1>
@@ -15,7 +15,7 @@
 <br>
 
 <p align="center">
-  <img src="https://github.com/axelriv62/recettes-de-mamy-lens/tree/main/resources/images/screenshot.png" alt="screenshot" width="800">
+  <img src="https://github.com/axelriv62/recettes-de-mamy-lens/blob/main/resources/images/screenshot.png" alt="screenshot" width="800">
 </p>
 
 <br>
